@@ -34,6 +34,7 @@ public class Arquivo<T extends Registro>{
         arquivo.writeInt(proximoID);
         
         obj.setID(proximoID);
+        
         arquivo.seek(arquivo.length());
 
         byte[] b = obj.toByteArray();
