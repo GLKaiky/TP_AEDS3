@@ -27,14 +27,14 @@ public class Arquivo<T extends Registro>{
         }
     }   
 
-    public int Create(T obj) throws IOException{
+    public int Create(T obj) throws IOException{    
         this.arquivo.seek(0);
         int proximoID = arquivo.readInt() + 1;
         arquivo.seek(0);
         arquivo.writeInt(proximoID);
         
         obj.setID(proximoID);
-        
+
         arquivo.seek(arquivo.length());
 
         byte[] b = obj.toByteArray();
@@ -43,5 +43,21 @@ public class Arquivo<T extends Registro>{
         arquivo.write(b);
 
         return obj.getID();
+    }
+
+    public void Read()throws IOException{
+        Tarefa obj = new Tarefa();
+        this.arquivo.seek(0); 
+        int qunatidadeRegistros = arquivo.readInt(); //Vai ler o id
+        while(qunatidadeRegistros > 0){
+            if(arquivo.readByte() == ' '){
+                short tam = arquivo.readShort();
+                byte[] b = new byte[tam];
+                arquivo.readFully(b, 0, tam);
+                obj.fromByteArray(b);
+
+                System.out.println(obj.toString());
+            }
+        }
     }
 }

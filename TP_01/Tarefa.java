@@ -114,5 +114,10 @@
             this.prioridade = dis.readByte();
         }   
 
+
+        public String toString(){
+            return "ID" + getID() + " Nome: " + getNome() + " Criacao: " + getCriacao() + " Conclusão: " + getConclusao() + " Status: " + getStatus() + " Prioridade: " + getPrioridade();
+        }
+
         
     }
