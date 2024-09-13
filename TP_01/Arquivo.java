@@ -45,20 +45,21 @@ public class Arquivo<T extends Registro>{
     //Método Read
     public T read(int id){
         try (RandomAccessFile raf = new RandomAccessFile(this.fileName, "rw")) {
-
-            // Encontrar end
             ParIDEndereco pid = indiceDireto.read(id);
+
             if(pid != null) {
-                this.objeto = construtor.newInstance();
-                
-                // AF
                 raf.seek(pid.getEndereco());
+
+                // Obter metadados do registro
                 byte lapide = raf.readByte();
                 int tamArq = raf.readInt();
-                if(lapide == 0){
-                    byte [] array = new byte[tamArq];
+                if(lapide == 0) { 
+                    byte[] array = new byte[tamArq];
                     raf.read(array);
+
+                    this.objeto = construtor.newInstance();
                     this.objeto.fromByteArray(array);
+
                     if(objeto.getId() == id){
                         raf.close();
                         return this.objeto;
@@ -76,14 +77,16 @@ public class Arquivo<T extends Registro>{
     public boolean delete(int id) throws Exception {
         RandomAccessFile raf = new RandomAccessFile(this.fileName, "rw");
         boolean success = false;
+
         ParIDEndereco pie = indiceDireto.read(id);
-        if(pie != null){
+        if(pie != null) {
+            // Let metadados do arquivo
             raf.seek(pie.getEndereco());
             long posAtual = raf.getFilePointer();
-            Byte lapide = raf.readByte();
+            byte lapide = raf.readByte();
             if(lapide == 0){
                 raf.seek(posAtual);
-                raf.write(1);
+                raf.write(1); // Escrever morto na lapide
                 success = true;
             }
         }
@@ -95,29 +98,37 @@ public class Arquivo<T extends Registro>{
     public boolean update(T novoObjeto)throws Exception{
         RandomAccessFile raf = new RandomAccessFile(this.fileName, "rw");
         boolean success = false;
+
         ParIDEndereco pie = indiceDireto.read(novoObjeto.getId());
         if(pie != null){
+            //Ler metadados
             raf.seek(pie.getEndereco());
             long posAtual = raf.getFilePointer();
-            Byte lapide = raf.readByte();
+            byte lapide = raf.readByte();
+
             if(lapide == 0){
+                success = true;
+
                 int tamArq = raf.readInt();
                 byte [] array = novoObjeto.toByteArray();
-                if(array.length <= tamArq){
-                    raf.seek(posAtual + 5);
+                if(array.length <= tamArq) { //Se cabe dentro do registro
+                    raf.seek(posAtual + 5); //Pular metadados
                     raf.write(array);
                 }
                 else{
                     raf.seek(posAtual);
-                    raf.write(1);
+                    raf.write(1); //Marcar registro morto
+
+                    // Escrever novo registro no final
                     raf.seek(raf.length());
                     long novoEndereco = raf.getFilePointer();
                     raf.writeByte(0);
                     raf.writeInt(array.length);
                     raf.write(array);
+
+                    // Atualizar indice
                     indiceDireto.update(new ParIDEndereco(novoObjeto.getId(), novoEndereco));
                 }
-                success = true;
             }
         }
         raf.close();
