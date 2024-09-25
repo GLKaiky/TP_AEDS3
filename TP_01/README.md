@@ -39,7 +39,7 @@ Das experiências adiquiridas durante a implementação do TP, podemos ressaltar
 <pre>Sim, ele faz o tratamento correto para evitar erros</pre>
 
 ### A operação de exclusão marca o registro como excluído e o remove do índice direto?
-<pre>Ele marca o registro como excluído ponto um "*" em sua lápide</pre>
+<pre>Ele marca o registro como excluído utilizando uma variável byte com valor '1' para indicar a exclusão em sua lápide</pre>
 
 ### O trabalho está funcionando corretamente?
 <pre>Sim, o trabalho está totalmente funcional</pre>
