@@ -1,5 +1,5 @@
 package App;
-import seeds.Popular;
+import ArquivoClass.*;
 
 public class App {
 
@@ -7,8 +7,10 @@ public class App {
   //private static Arquivo<Tarefa> arqTarefa;
 
   public static void main(String[] args) throws Exception{
-    Popular pop = new Popular();
-    pop.list();
+      ArquivoCategorias categorias = new ArquivoCategorias();
+      
+      System.out.println(categorias.read("TP_Aeds2"));  
+
   }
 
 }
