@@ -11,6 +11,7 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
     ArvoreBMais<ParIDcIDt> arvoreB;
 
     public ArquivoTarefas() throws Exception{
+        
         super(Tarefa.class.getConstructor(), "arquivoTarefas");
         try{
             arvoreB = new ArvoreBMais<>(ParIDcIDt.class.getConstructor(), 5, "./dados/ArvoreTarefas");        
@@ -19,9 +20,10 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
         }
     }
 
-    /* Criando a Tarefa */
+    /* Método de Criação da Tarefa. Retornando o ID */
     @Override
     public int create(Tarefa tarefa)throws Exception{
+        
         int id = super.create(tarefa);
         tarefa.setId(id);
         System.out.println(id);
@@ -29,8 +31,9 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
         return id;
     }
     
-    /* Lendo os ID's do ArrayList para retornar as Categorias */
+    /* Método de Leitura. Lendo os ID's do ArrayList. Retorna as Tarefas */
     public ArrayList<Tarefa> read(ParNomeId parNomeId) throws Exception{
+        
         ArrayList<Tarefa> t = new ArrayList<>();
         ArrayList<ParIDcIDt> id = new ArrayList<>();
         id = arvoreB.read(new ParIDcIDt(parNomeId.getId()));
@@ -39,8 +42,10 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
         }
         return t;
     }
-
+    
+    /* Método de Atualização. Procura o nome da Tarefa desejada para poder muda-la. Retorna booleano. */
     public boolean update(ParNomeId parNomeId,String nomeTarefa, Tarefa updateTarefa) throws Exception{
+        
         ArrayList<Tarefa> t = read(parNomeId);
 
         for(int i = 0; i<t.size(); i++){
@@ -52,5 +57,20 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
 
        return super.update(updateTarefa);
     }
-    
+
+    /* Método de  */
+    public boolean delete(ParNomeId parNomeId ,String nomeTarefa)throws Exception{
+        
+        ArrayList<Tarefa> t = read(parNomeId);
+        Tarefa delete = new Tarefa();
+
+        for(int i = 0; i<t.size(); i++){
+            if(t.get(i).getNome().equals(nomeTarefa)){
+                delete = t.get(i);   
+            }
+        }
+
+        return super.delete(delete.getId()) ? arvoreB.delete(new ParIDcIDt(parNomeId.getId(), delete.getId())) : false;
+           
+    }
 }

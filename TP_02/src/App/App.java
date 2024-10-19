@@ -19,11 +19,9 @@ public class App {
       Tarefa tarefa = new Tarefa("TPaids3", aux, auy, (byte) 0, (byte) 2);
       tarefa.setIdCategoria(1);
 
-      System.out.println(categorias.read("Estudar"));
+    System.out.println(categorias.deleteTarefa("Estudar2", "TPaids3"));
 
-      System.out.println(categorias.updateTarefa("Estudar", "TPaids3", tarefa));
-      System.out.println(categorias.read("Estudar"));
-
+    System.out.println(categorias.read("Estudar2"));
   }
 
 }
