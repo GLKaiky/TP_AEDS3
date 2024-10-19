@@ -17,7 +17,7 @@ public class Tarefa implements Registro{
     private int id;
     
     //Chave Estrangeira
-    private short idCategoria;
+    private int idCategoria;
     
     //Atributos da classe Tarefa
     private String nome;
@@ -52,7 +52,7 @@ public class Tarefa implements Registro{
         this.prioridade = prioridade;
     }
 
-    public void setIdCategoria(short idCategoria){
+    public void setIdCategoria(int idCategoria){
         this.idCategoria = idCategoria;
     }
     //Fim Métodos Set's
@@ -82,7 +82,7 @@ public class Tarefa implements Registro{
         return this.prioridade;
     }
 
-    public short getIDCategoria(){
+    public int getIDCategoria(){
         return this.idCategoria;
     }
     //Fim Métodos Get's
@@ -98,7 +98,7 @@ public class Tarefa implements Registro{
             dos.writeInt((int) this.fim.toEpochDay());
             dos.writeByte(this.status);
             dos.writeByte(this.prioridade);
-            dos.writeShort(this.idCategoria);
+            dos.writeInt(this.idCategoria);
             
         } catch(Exception e){
             System.out.println("Deu bobs ao converter Tarefa para array de byte");
@@ -118,7 +118,7 @@ public class Tarefa implements Registro{
             this.fim = LocalDate.ofEpochDay(dis.readInt());
             this.status = dis.readByte();
             this.prioridade = dis.readByte();
-            this.idCategoria = dis.readShort();
+            this.idCategoria = dis.readInt();
 
         } catch(Exception e){
             System.out.println("Deu bobs ao converter vetor de byte pra objeto tarefa");

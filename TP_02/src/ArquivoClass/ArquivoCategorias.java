@@ -3,6 +3,7 @@ package ArquivoClass;
 import Tarefa.Categoria;
 import ArvoreB.ArvoreBMais;
 import ArvoreB.ParNomeId;
+import Tarefa.Tarefa;
 
 import java.util.ArrayList;
 
@@ -34,8 +35,27 @@ public class ArquivoCategorias extends Arquivo<Categoria> {
         return id;
     } 
 
-    public ParNomeId read(String nomeCategoria)throws Exception{
+    public ArrayList<Tarefa> read(String nomeCategoria)throws Exception{
         ArrayList<ParNomeId> categorias = arvoreB.read(new ParNomeId(nomeCategoria));
-        return categorias.get(0);
+        if(categorias.isEmpty()){
+            System.out.println("Categoria inexistenteeeee");
+            return null;
+        }
+        ArrayList<Tarefa> t = new ArrayList<>();
+        ArquivoTarefas tarefas = new ArquivoTarefas();
+
+        t = tarefas.read(categorias.get(0));
+        return t;
+    }
+
+    public boolean updateTarefa(String nomeCategoria, String nomeTarefa, Tarefa updateTarefa)throws Exception{
+        ArrayList<ParNomeId> categorias = arvoreB.read(new ParNomeId(nomeCategoria));
+        if(categorias.isEmpty()){
+            System.out.println("Categoria inexistente");
+            return false;
+        }
+        ArquivoTarefas tarefas = new ArquivoTarefas();
+
+        return tarefas.update(categorias.get(0), nomeTarefa, updateTarefa);
     }
 }

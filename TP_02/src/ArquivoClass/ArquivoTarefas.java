@@ -24,6 +24,7 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
     public int create(Tarefa tarefa)throws Exception{
         int id = super.create(tarefa);
         tarefa.setId(id);
+        System.out.println(id);
         arvoreB.create(new ParIDcIDt(tarefa.getIDCategoria(), id));
         return id;
     }
@@ -35,9 +36,21 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
         id = arvoreB.read(new ParIDcIDt(parNomeId.getId()));
         for(int i = 0; i<id.size(); i++){
             t.add(super.read(id.get(i).getId2())); 
-            System.out.println(t.get(i));
         }
         return t;
+    }
+
+    public boolean update(ParNomeId parNomeId,String nomeTarefa, Tarefa updateTarefa) throws Exception{
+        ArrayList<Tarefa> t = read(parNomeId);
+
+        for(int i = 0; i<t.size(); i++){
+            if(t.get(i).getNome().equals(nomeTarefa)){
+                updateTarefa.setId(t.get(i).getId());
+                i = t.size();
+            }
+        }
+
+       return super.update(updateTarefa);
     }
     
 }
