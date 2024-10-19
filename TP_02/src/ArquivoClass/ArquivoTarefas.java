@@ -58,7 +58,7 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
        return super.update(updateTarefa);
     }
 
-    /* Método de  */
+    /* Método de Delete. Procura pelo nome da Tarefa para ser Deletada. Retorna um booleano. */
     public boolean delete(ParNomeId parNomeId ,String nomeTarefa)throws Exception{
         
         ArrayList<Tarefa> t = read(parNomeId);
@@ -69,7 +69,7 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
                 delete = t.get(i);   
             }
         }
-
+        
         return super.delete(delete.getId()) ? arvoreB.delete(new ParIDcIDt(parNomeId.getId(), delete.getId())) : false;
            
     }

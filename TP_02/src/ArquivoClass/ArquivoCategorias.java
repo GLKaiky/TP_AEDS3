@@ -88,6 +88,7 @@ public class ArquivoCategorias extends Arquivo<Categoria> {
         return tarefas.update(categorias.get(0), nomeTarefa, updateTarefa);
     }
 
+    /* Método de Delete. */
     public boolean deleteTarefa(String nomeCategoria, String nomeTarefa)throws Exception{
         ArrayList<ParNomeId> categorias = arvoreB.read(new ParNomeId(nomeCategoria));
 
@@ -99,5 +100,21 @@ public class ArquivoCategorias extends Arquivo<Categoria> {
         ArquivoTarefas tarefas = new ArquivoTarefas();
 
         return tarefas.delete(categorias.get(0), nomeTarefa);
+    }
+
+    public boolean delete(String nomeCategoria) throws Exception{
+        ArrayList<ParNomeId> cat = arvoreB.read(new ParNomeId(nomeCategoria));
+
+        if(cat.isEmpty()){
+            System.out.println("Categoria Inesistente");
+            return false;
+        }
+        ArquivoTarefas tarefas = new ArquivoTarefas();
+        ArrayList<Tarefa> t = tarefas.read(cat.get(0));
+
+        if(t.isEmpty())
+            return super.delete(cat.get(0).getId()) ? arvoreB.delete(cat.get(0)) : false;
+
+        return false;
     }
 }
