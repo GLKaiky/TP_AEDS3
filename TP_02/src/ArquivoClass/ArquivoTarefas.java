@@ -6,6 +6,9 @@ import Tarefa.Tarefa;
 
 
 public class ArquivoTarefas extends Arquivo<Tarefa>{
+    public static final String AMARELO = "\033[33m"; // Amarelo
+    public static final String VERDE = "\033[32m"; // Verde
+    public static final String RESET = "\033[0m"; // Resetar cor
 
     /* Instanciando o Objeto "ArvoreBMais" */
     ArvoreBMais<ParIDcIDt> arvoreB;
@@ -42,7 +45,7 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
         }
         return t;
     }
-    
+
     /* Método de Atualização. Procura o nome da Tarefa desejada para poder muda-la. Retorna booleano. */
     public boolean update(ParNomeId parNomeId,String nomeTarefa, Tarefa updateTarefa) throws Exception{
         
@@ -70,7 +73,24 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
             }
         }
         
-        return super.delete(delete.getId()) ? arvoreB.delete(new ParIDcIDt(parNomeId.getId(), delete.getId())) : false;
-           
+        return super.delete(delete.getId()) ? arvoreB.delete(new ParIDcIDt(parNomeId.getId(), delete.getId())) : false;      
     }
+
+    public void listar() throws Exception{
+
+        try{
+            ArrayList<Tarefa> categorias = super.list();
+    
+            if(categorias.isEmpty())
+                throw new Exception("Categorias ainda não foram criadas");
+            
+            for(int i = 0; i<categorias.size(); i++){
+                System.out.println(VERDE + " Nome da Tarefa: " + categorias.get(i).getNome() + "Data de Inicio: " + categorias.get(i).getInicio() + "Data de Fim: " + categorias.get(i).getFim() +
+                "Status: " + categorias.get(i).getStatus() + "Prioridade: " + categorias.get(i).getPrioridade() + "" + RESET);
+            }
+            }catch(Exception e){
+                System.out.println(e.getMessage());
+        }
+    }
+    
 }

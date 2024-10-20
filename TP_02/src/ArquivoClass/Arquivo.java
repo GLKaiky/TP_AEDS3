@@ -25,6 +25,7 @@ public class Arquivo<T extends Registro>{
         // Pegar novo ID
         raf.seek(0);
         int proxId = raf.readInt() + 1;
+
         objeto.setId(proxId);
 
         // Ir para EOF
@@ -41,7 +42,7 @@ public class Arquivo<T extends Registro>{
         raf.seek(0);
         raf.writeInt(proxId);
         raf.close();
-        
+
         // Atualizar hash extensivel com id / endereco
         indiceDireto.create(new ParIDEndereco(proxId, endereco));
 
@@ -144,21 +145,26 @@ public class Arquivo<T extends Registro>{
     //Método Construtor
     public Arquivo(Constructor<T> construtor, String fN) throws Exception{
         this.construtor = construtor;
-        this.diretorio = new File("dados");
+        this.diretorio = new File("./dados");
         if(!diretorio.exists()){
             diretorio.mkdir();
         }
-        this.fileName = "dados/" + fN + ".db";
+        this.fileName = "./dados/" + fN + ".db";
+        File f = new File(this.fileName);
+        if(!f.exists()){
         RandomAccessFile raf = new RandomAccessFile(this.fileName, "rw");
         raf.seek(0);
         raf.writeInt(0);
+        
         raf.close();
+        }
         indiceDireto = new HashExtensivel<>(
             ParIDEndereco.class.getConstructor(), 
             4, 
-            "dados/" + fN + ".hash_d.db", 
-            "dados/" + fN + ".hash_c.db"
+            "./dados/" + fN + ".hash_d.db", 
+            "./dados/" + fN + ".hash_c.db"
         );
+        
     }
 
     // Método que lista todas as entradas do arquivo
@@ -166,6 +172,8 @@ public ArrayList<T> list() throws Exception {
     ArrayList<T> objects = new ArrayList<>();
     try (RandomAccessFile raf = new RandomAccessFile(this.fileName, "rw")) {
         long pos = fimCabecalho; // Ignora o cabeçalho inicial
+        if(pos == 0)
+            throw new Exception("Arquivo vazio");
         // Percorre todo o arquivo
         while (pos < raf.length()) {
             raf.seek(pos);
