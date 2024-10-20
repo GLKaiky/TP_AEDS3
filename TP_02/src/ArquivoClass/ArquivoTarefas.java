@@ -76,6 +76,7 @@ public class ArquivoTarefas extends Arquivo<Tarefa>{
         return super.delete(delete.getId()) ? arvoreB.delete(new ParIDcIDt(parNomeId.getId(), delete.getId())) : false;      
     }
 
+    /* Listando as Tarefas */
     public void listar() throws Exception{
 
         try{
