@@ -1,51 +1,148 @@
-# Documentação TP_01
+# Documentação TP_02
 
-## 🔴Motivações e Esforço
-À primeira parte do trabalho em questão, se trata de um CRUD (Create, Read, Update, Delete) para um sistema de registro de Tarefas no geral. Tais tarefas são descritas por uma entidade com: Nome, Data de Inicio, Data de Conclusão, Prioridade e Status da tarefa.
+  
 
-## 🔵Funcionamento do CRUD, suas Classes e métodos
+## 🔴Sobre
 
-### 🔵Main app
-Iniciamos com um arquivo principal "APP".java onde serão feitas as principais requisições para o CRUD e acesso do usuário, sendo isso a Main do programa. Descrevendo mais adentro dos registros, criamos também a classe "Registro".java que tem por sua principal funcionalidade ser uma interface (uma interface é um espécime de "contrato" criado para implementar em classes que deverão ter tais métodos descritos na interface) para as demais classes. Logo em seguida a interface "Registro" é implementada na classe "Tarefa".java onde já descrita anteriormente, irá ter os métodos do tal registro como funcionalidades extras necessárias para o funcionamento do programa como os métodos de "toByteArray" e "fromByteArray" métodos que transformem um objeto em uma sequência de bytes e que transforme uma sequência de bytes em um objeto "Tarefa".
+Uma simples base de dados para armazenar e recuperar dados. Os dados são armazenados em um arquivo indexado, e várias estruturas de dados podem ser usadas para encontrar, alterar e modificar dados através de outros atributos do registro. Neste trabalho apresentamos um exemplo de como fazer uma relação 1 com N usando uma estrutura de Árvore B+ para permitir extrair todos os N dados de um só bloco
 
-### 🔵Classes Tarefa, Registro e Arquivo
-Seguindo o envio do objeto "Tarefa" para seu registro, chegamos na classe "Arquivo".java sendo uma classe genérica (que pode implementar qualquer tipo de objeto sem excessões) tal o objeto genérico "T" terá uma herança de "Registro" onde a classe "Arquivo" apenas poderá implementar e registrar objetos que tenham implementado a interface "Registro". Como construtor a classe "Arquivo".java terá como parâmetro o objeto do tipo Constructor<> para receber construtores de quaisquer objetos, e um nome para o arquivo, nomeado no trabalho como "fN", e como função ele irá criar uma pasta de dados para salvar o arquivo de registro .DB e os arquivos com as referências de hashExtensível dos registros contidos no arquivo, além disso criará o cabeçalho do arquivo que irá conter um numero inteiro dizendo a quantidade de registros presentes no arquivo até então.
+## 🔵Funcionamento
 
-### 🔵Classes RegistroHashExtensível, ParIDEndereco
-Como padrão de implementação, assim como feito anteriormente, criamos o arquivo de Registro genérico que será seguido como interface padrão para a hash extensível, agora implementando métodos como o de HashCode e size. A classe ParIDEndereco implementa o método RegistroHashExtensivel que será responsável principalmente por implementar o id e endereço dos objetos registrados dentro do arquivo principal dando assim uma maneira de acesso mais rápida e menos sequencial aos registros feitos.
+### Arquivo Indexado Genérico
 
-### 🔵HashExtensível, Cestos e Diretórios
-A classe de HashExtensível funciona a base de outras 2 classes, chamadas respectivamente de Cestos e Diretório, sabendo disso, seu funcionamento funciona a base de funções como CRUDS também onde inserimos as referências do endereço dos registros do arquivo principal dentro dos Cestos.
-Os cestos armazenam os registros efetivos (como tarefas). Cada cesto é responsável por manter um conjunto de registros que possuem o mesmo valor de hash base, limitado pela capacidade do cesto.Quando um cesto atinge sua capacidade máxima, ele é dividido, e o diretório é atualizado para refletir essa mudança.
+É usado de um arquivo indexado, estruturado em dois arquivos. No primeiro arquivo, o Arquivo Principal, são armazenados os dados da seguinte forma:
 
-O diretório mantém ponteiros (endereços) para os cestos, organizando-os de acordo com a profundidade global do diretório. A profundidade global define quantos bits do valor de hash são usados para determinar o cesto apropriado.
-O diretório é um array de endereços, onde cada posição aponta para um cesto específico. A profundidade global define o tamanho do array.
+- Cabeçalho: contém próximo UID incrementável
+- Conjunto de Registro: o resto do arquivo contém os demais registros, organizado da seguinte forma:
+	- Lápide: marca se o arquivo foi logicamente removido ou não
+	- Tamanho: tamanho em bytes do Registro de tamanho variável que será armazenado logo em frente
+	- Registro: contém o id do registro e os seus demais atributos
+
+  
+
+Cada posição inicial de um registro é armazenada em um Arquivo de Hash Extensível, que armazena um par de ID do registro e a endereço do registro no arquivo (em que 0 representa o primeiro byte). A busca na hash é feita com ID, o que disponibiliza acesso direto ao registro atrelado.
+
+Este gerenciamento é feito de forma genérica, e qualquer alteração no arquivo consequentemente afeta a estrutura de acesso atrelada. Isto acontece para todos os métodos de CRUD do arquivo (criação, leitura, edição e deleção), onde métodos do Arquivo de Hash Extensível são disparados para notificar a mudança do Arquivo Principal.
+
+Podemos expandir a capacidade das operações da base de dado atrelando métodos de outras estruturas de dados no final de cada método presente CRUD na classe arquivo (create, delete, update, read), permitindo atualizar outras estruturas de dados com comportamento semelhante ao Hash Extensível
+
+
+
+## Estrutura de Dados Implementadas
+
+### Hash Extensível Genérico
+
+Implementação usada para atrelar dois valores quando não é relevante guardar os dados em ordem. É usada também para a implementação interna não editável dentro do Arquivo Indexado Genérico.
+
+Ela espera como tipo genérico uma classe que capaz de de ser convertido e bytes e recriado através desses bytes, nomeada de *RegistroHashExtensivel*, mas para o funcionamento é esperado que a classe contenha apenas dois valores e um deles serve como um UID responsável pela criação do hash. O método hashCode() também deverá ser atualizado para que apenas este UID seja utilizado. O tipo não deverá conter tamanho variável, o que permite estimar precisamente o tamanho em bytes de cada instância.
+
+Esta estrutura não aceita dados sem UIDS, e elementos de mesma hash não são aceitas pela estrutura. O motivo disso é permitir que cada busca retorne apenas um valor associado à ele.
+
+O Hash Extensível é dividido em dois arquivos, ambos com capacidade de crescer indefinidamente:
+
+- Arquivo de Diretório: Contém profundidade global e uma lista de posições para acessar os cestos
+- Arquivo de Cestos: Contém todos os cestos de tamanho fixo, capaz de ser lido diretamente pela memória principal. Cada cesto contém sua profundidade local e em sequência os dados de hash local correspondente  
+
+A expansão do diretório é feito de acordo com os incrementos da sua profundidade global, e é uma lista de tamanho $2^{profundidadeGlobal}$. Assim como no conceito de Hash Extensível, mais de um índice da lista podem referenciar ao mesmo cesto, caso possua uma profundidade local menor que a profundidade global.
+
+A quantidade máxima de cada cesto é recebida em seu construtor, junto com o nome de cada um dos dois arquivos. O cesto tem uma capacidade máxima de 32767 elementos, e uma profundidade global máxima de 127. Não há tamanho máximo para cada instância, então é necessário cautela na hora de definir o par de chave-valor.
+
+  
+  
+
+### Árvore B+ Genérica
+
+Implementação usada para atrelar dois valores quando é relevante guardar os dados em ordem.
+
+Similarmente ao Hash Extensível Genérico, é esperado que a classe seja convertida e recriada por uma lista de bytes, e é esperado que contenha um par de valores de um UID e outro valor atrelado. Mas diferentemente da estrutura de Hash, não é necessário atualizar o hashCode(), pois não será atualizado, mas será necessário fazer comparação compareTo() com outro do mesmo tipo. A classe que adiciona esta funcionalidade é chamada de RegistroArvoreBMais
+
+Diferentemente do HashExtensivel, esta estrutura será usada para busca por meio de um valor não único, para retornar lista de valores únicos.
+
+Para compareTo(), a definição esperada é uma ordenação que priorize este primeiro o valor não único, mas caso ele seja repetido o elemento será ordenado pelo outro valor do par.
+
+A estrutura é organizada por meio de nós de n elementos, e geram uma árvore uniforme. Quando a quantidade de elementos excede o tamanho do nó, os nós não folhas possuem apenas cópias não válidas da chave, responsáveis para indicar por meio do método compareTo() onde será o destino dos métodos CRUD.
+
+A ordem da árvore B+ é informada no construtor, mas não há limite de profundidade.
+
+  
+
+## 🔵Exemplo Gerado
+
+Como exemplo, foi criado um crud para inserir de forma extensiva uma lista de tarefas de classe Tarefa que são classificadas por outra classe de classificação. Os dados são armazenados na implementação de Arquivo Genérico para a classe Tarefa, mas duas árvores B+ auxiliares são usadas para atrelar um UID de classificação com múltiplas UIDS de Tarefa, e um UID de classificação com um nome.
+
+O CRUD no terminal permite a adição e edição de Tarefas diretamente através da especificação de seus atributos: nome, índice de classificação (as possibilidades são informadas), data de início e data de fim.
+
+Fora isto, é possível adicionar e remover categorias caso estejam vazias.
+
+Para visualização, é usado da classificação para mostrar apenas as tarefas pertencente a aquele grupo. Usamos esta mesma estrutura para a remoção e edição, onde a classificação é fornecida primeiro para facilitar na escolha de qual tarefa editar / remover.
+
+  
+  
 
 ## 🟢Experiência
-Das experiências adiquiridas durante a implementação do TP, podemos ressaltar o novo conhecimento sobre a manipulação de bytes em arquivos e um entendimento maior de códigos e estruturas de dados mais complexas. Além do mais dificuldades a serem ressaltadas foram durante a implementação e entendimento da HashExtensível que se mostrou algo mais complexo.
 
+Como experiência, foi possível aprofundar no conhecimento e visualização de como organizar, armazenar e acessar dados sem necessitar de um id específico, permitindo ter uma noção sobre como os bancos de dados fazem para armazenar valores de forma extremamente escalável e eficiente.
+
+  
+  
 ## 🟠Checklist
 
-### O trabalho possui um índice direto implementado com a tabela hash extensível?
+  
+
+### O CRUD (com índice direto) de categorias foi implementado?
+
 <pre>Sim, a tabela Hash Extensível foi corretamente implementada de acordo com os códigos mostrados em sala de aula</pre>
 
-### A operação de inclusão insere um novo registro no fim do arquivo e no índice e retorna o ID desse registro?
-<pre>Sim, a inclusão faz a inserção no fim do arquivo, e atualiza seu índice</pre>
+  
 
-### A operação de busca retorna os dados do registro, após localizá-lo por meio do índice direto?
-<pre>Sim, ele faz a busca de acordo com os buckets da Hash extensível e encontra o indice</pre>
+### Há um índice indireto de nomes para as categorias?
 
-### A operação de alteração altera os dados do registro e trata corretamente as reduções e aumentos no espaço do registro?
-<pre>Sim, ele faz o tratamento correto para evitar erros</pre>
+<pre>Sim, existe uma árvore B+ que fornece o id de uma categoria através de seu nome</pre>
 
-### A operação de exclusão marca o registro como excluído e o remove do índice direto?
-<pre>Ele marca o registro como excluído utilizando uma variável byte com valor '1' para indicar a exclusão em sua lápide</pre>
+  
+
+### O atributo de ID de categoria, como chave estrangeira, foi criado na classe Tarefa?
+
+<pre>Sim, Tarefa possui a chave estrangeira, e ela é usada para definição das Árvore B+ entre id categoria e id tarefa</pre>
+
+  
+
+### Há uma árvore B+ que registre o relacionamento 1:N entre tarefas e categorias?
+
+<pre>Sim, uma das árvores trata exatamente este tipo de relacionamento</pre>
+
+  
+
+### É possível listar as tarefas de uma categoria?
+
+<pre>Sim, o método de busca é responsável por listar todas as tarefas presentes em uma categoria</pre>
+
+  
+
+### A remoção de categorias checa se há alguma tarefa vinculada a ela?
+
+<pre>Sim, a categoria não pode ser removido caso haja alguma tarefa</pre>
+
+  
+
+### A inclusão da categoria em uma tarefa se limita às categorias existentes?
+
+<pre>Sim, uma lista das possíveis categorias é fornecida na operação</pre>
+
+  
 
 ### O trabalho está funcionando corretamente?
-<pre>Sim, o trabalho está totalmente funcional</pre>
 
-### O trabalho está completo?
-<pre>Sim, o trabalho foi completo com sucesso</pre>
+<pre>Sim, é possível executar todas operações disponíveis sem que haja erros no dados armazenados</pre>
+
+  
+
+### O trabalho está funcionando corretamente?
+
+<pre>Sim, todos os requisitos foram atendidos</pre>
+
+  
 
 ### O trabalho é original e não a cópia de um trabalho de outro grupo?
-<pre>Sim, foi um trabalho feito em equipe pelo grupo</pre>
+
+<pre>Sim, usamos como auxílio apenas o código fornecido pelo professor Marcos Kutova</pre> 
