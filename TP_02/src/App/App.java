@@ -157,7 +157,7 @@ public class App {
     public void atualizarTarefa() throws Exception {
 
       Tarefa t = new Tarefa();
-      String input, nomedaTarefa, nomedaCategoria;
+      String input, nomedaTarefa = "", nomedaCategoria;
       try {
         /* Evitando Buffer */
         scanf.nextLine();
@@ -167,28 +167,58 @@ public class App {
         arquivoCategorias.listar();
         nomedaCategoria = scanf.nextLine();
 
-        /* Scanneando o Nome da Tarefa */
-        System.out.println("Digite o nome da tarefa que deseja Alterar");
-
         this.listadeTarefas(nomedaCategoria);
 
-        nomedaTarefa = scanf.nextLine();
-
+        while (t.getNome() == null) {
+          /* Scanneando o Nome da Tarefa */
+          System.out.println("Digite o nome da tarefa que deseja Alterar");
+          nomedaTarefa = scanf.nextLine();
+          ArrayList<Tarefa> lista = arquivoCategorias.read(nomedaCategoria);
+          for(Tarefa tarefa : lista){
+            if(tarefa.getNome().equals(nomedaTarefa)){
+              t = tarefa;
+            }
+          }
+          if(t.getNome() == null){
+            System.out.println("Tarefa não encontrada, tente novamente");
+          }
+        }
         System.out.println("Digite seu novo nome");
         t.setNome(scanf.nextLine());
+        
 
         /* Scanneando a Data de Inicio */
-        System.out.println("Digite a data de inicio (No formato dd/MM/yyyy)");
-        input = scanf.nextLine();
+        LocalDate data = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate data = LocalDate.parse(input, formatter);
-        t.setInicio(data);
+        while(data == null){
+          System.out.println("Digite a data de inicio (No formato dd/MM/yyyy)");
+          input = scanf.nextLine();
+          try{
+            data = LocalDate.parse(input, formatter);
+          } catch(Exception e){
+            System.out.println("Data inválida, favor utilizar o formato (dd/MM/yyyy)");
+            data = null; 
+          }
+          if(data != null){
+            t.setInicio(data);
+          }
+        }
 
+        data = null;
         /* Scanneando a Data Final */
-        System.out.println("Digite a data do Fim (No formato dd/MM/yyyy)");
-        input = scanf.nextLine();
-        data = LocalDate.parse(input, formatter);
-        t.setFim(data);
+        while(data == null){
+          System.out.println("Digite a data do Fim (No formato dd/MM/yyyy)");
+          input = scanf.nextLine();
+          try{
+            data = LocalDate.parse(input, formatter);
+          } catch(Exception e){
+            System.out.println("Data inválida, favor utilizar o formato (dd/MM/yyyy)");
+            data = null; 
+          }
+          if(data != null){
+            t.setFim(data);
+          }
+        }
 
         /* Scanneando o Status da Tarefa */
         System.out.println("Digite os Status da nova tarefa (Um numero)");
@@ -228,7 +258,6 @@ public class App {
         t.setIdCategoria(scanf.nextInt());
 
         /* Scanneando a Data de Inicio */
-        
         LocalDate data = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         scanf.nextLine();

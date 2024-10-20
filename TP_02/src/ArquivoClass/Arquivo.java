@@ -172,7 +172,7 @@ public ArrayList<T> list() throws Exception {
     ArrayList<T> objects = new ArrayList<>();
     try (RandomAccessFile raf = new RandomAccessFile(this.fileName, "rw")) {
         long pos = fimCabecalho; // Ignora o cabeçalho inicial
-        if(pos == 0)
+        if(fimCabecalho + 1 >= raf.length())
             throw new Exception("Arquivo vazio");
         // Percorre todo o arquivo
         while (pos < raf.length()) {
@@ -181,7 +181,7 @@ public ArrayList<T> list() throws Exception {
             // Ler o metadado (lápide)
             byte lapide = raf.readByte();
             int tamArq = raf.readInt();
-            
+
             // Se não está excluído
             if (lapide == 0) {
                 byte[] array = new byte[tamArq];
@@ -190,11 +190,11 @@ public ArrayList<T> list() throws Exception {
                 T obj = construtor.newInstance();
                 obj.fromByteArray(array); // Reconstrói o objeto a partir do array de bytes
                 objects.add(obj);
-                
+                pos = raf.getFilePointer();
             }
-            
-            // Avança para o próximo registro
-            pos = raf.getFilePointer();
+            else{
+                pos = raf.getFilePointer() + tamArq;
+            }
         }
     } catch (Exception e) {
         System.out.println("Erro ao listar os registros.");
