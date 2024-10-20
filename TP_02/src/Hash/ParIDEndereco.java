@@ -20,6 +20,7 @@ public class ParIDEndereco implements RegistroHashExtensivel<ParIDEndereco> {
     // Warning: If that does not happen, The bucket inner element will be trimmed when stored
     private final short TAMANHO = 12;
     
+    /* Construtores */
     public ParIDEndereco() {
         this.id = -1;
         this.endereco = -1;
@@ -30,6 +31,7 @@ public class ParIDEndereco implements RegistroHashExtensivel<ParIDEndereco> {
         this.endereco = end;
     }
 
+    /* Métodos GET */
     public int getId() {
         return id;
     }
@@ -38,6 +40,7 @@ public class ParIDEndereco implements RegistroHashExtensivel<ParIDEndereco> {
         return endereco;
     }
 
+    /* Outros Métodos */
     @Override
     public int hashCode() {
         return this.id;

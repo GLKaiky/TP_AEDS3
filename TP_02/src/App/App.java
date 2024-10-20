@@ -16,12 +16,15 @@ public class App {
   public static final String VERDE = "\033[32m"; // Verde
   public static final String RESET = "\033[0m"; // Resetar cor
 
+  /* MAIN */
   public static void main(String[] args) throws Exception {
     CrudTarefas crudTarefas = new CrudTarefas();
     CrudCategorias crudCategorias = new CrudCategorias();
+
     /* Criando o Scanner e Resposta para ler a aentrada do usuário */
     Scanner scanf = new Scanner(System.in);
     int resposta = 0;
+
     while (true) {
       try {
 
@@ -57,7 +60,10 @@ public class App {
 
   }
 
+  /* CRUD DE TAREFAS */
   public static class CrudTarefas {
+
+    /* Atributos */
     public static ArquivoTarefas arquivoTarefas;
     public static ArquivoCategorias arquivoCategorias;
     public static final String AMARELO = "\033[33m"; // Amarelo
@@ -67,9 +73,13 @@ public class App {
 
     // Método para iniciar as operações de tarefas
     public void iniciarTarefas() throws Exception {
+
+      /* Atributos */
       arquivoTarefas = new ArquivoTarefas();
       arquivoCategorias = new ArquivoCategorias();
       int resposta = 0;
+
+      /* Printando na telas as opções */
       System.out.println(VERDE + ">Inicio>Tarefas" + RESET);
 
       System.out.println(AMARELO + "1) Incluir" + RESET);
@@ -80,6 +90,7 @@ public class App {
 
       resposta = scanf.nextInt();
 
+      /* Swtich */
       switch (resposta) {
         case 1:
           criarTarefa();
@@ -101,10 +112,12 @@ public class App {
 
     }
 
+    /* Método Privado para Listar as Tarefas */
     private void listadeTarefas(String nomeCategoria)throws Exception{
     try{
       ArrayList<Tarefa> t = arquivoCategorias.read(nomeCategoria);
 
+      /* For listnado as Tarefas */
       for (int i = 0; i < t.size(); i++) {
         System.out.println(VERDE + "[" + "Nome da Tarefa: " + t.get(i).getNome() + "||" + "Data de Inicio: "
             + t.get(i).getInicio() + "||" + "Data de Fim: " + t.get(i).getFim() + "||" +
@@ -260,14 +273,20 @@ public class App {
 
   }
 
+  /* CRUD DE CATEGORIAS */
   public static class CrudCategorias {
+
+    /* Atributos */
     public static ArquivoCategorias categoria;
     public static final String AMARELO = "\033[33m"; // Amarelo
     public static final String VERDE = "\033[32m"; // Verde
     public static final String RESET = "\033[0m"; // Resetar cor
     Scanner scanf = new Scanner(System.in);
 
+    /* Método para Inicializar as Operações */
     public void iniciarCategoria() throws Exception {
+
+      /* Atributos */
       categoria = new ArquivoCategorias();
       int resposta = 0;
       System.out.println(VERDE + ">Inicio>Categorias" + RESET);
@@ -280,6 +299,7 @@ public class App {
 
       resposta = scanf.nextInt();
 
+      /* Switch */
       switch (resposta) {
         case 1:
           criarCategoria();
@@ -301,24 +321,28 @@ public class App {
       }
     }
     
-
+    /* Método para criação de Categorias */
     public void criarCategoria() throws Exception {
       try {
         /* Limpar o buffer */
         scanf.nextLine();
         System.out.println("Digite o nome da Categoria a ser Criada");
         categoria.create(scanf.nextLine());
+
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
+
       System.out.println("Criado com sucesso");
       System.out.println();
       categoria.listar();
     }
 
+    /* Método parar Listar as Categorias */
     public void listarCategoria() throws Exception {
       String nomeCategoria;
       try {
+
         scanf.nextLine();
         System.out.println("Digite o nome da Categoria que deseja listar as tarefas");
         System.out.println();
@@ -339,6 +363,7 @@ public class App {
       }
     }
 
+    /* Método para Atualizar Categorias */
     public void atualizarCategoria() throws Exception {
       String nomeCategoria, novaCategoria;
       try {
@@ -358,9 +383,11 @@ public class App {
       System.out.println("Atualizado com sucesso");
     }
 
+    /* Método para Deletar Categorias */
     public void deletarCategoria() throws Exception {
       String nomeCategoria;
       try {
+        
         scanf.nextLine();
         System.out.println("Digite o nome da Categoria que deseja deletar");
         System.out.println();
