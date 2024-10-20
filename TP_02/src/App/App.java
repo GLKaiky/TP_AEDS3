@@ -5,7 +5,6 @@ import Tarefa.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -43,6 +42,7 @@ public class App {
             crudCategorias.iniciarCategoria();
             break;
           case 3:
+            scanf.close();
             System.out.println("Saindo...");
             System.exit(0);
           default:
@@ -58,7 +58,8 @@ public class App {
   }
 
   public static class CrudTarefas {
-
+    public static ArquivoTarefas arquivoTarefas;
+    public static ArquivoCategorias arquivoCategorias;
     public static final String AMARELO = "\033[33m"; // Amarelo
     public static final String VERDE = "\033[32m"; // Verde
     public static final String RESET = "\033[0m"; // Resetar cor
@@ -66,8 +67,10 @@ public class App {
 
     // Método para iniciar as operações de tarefas
     public void iniciarTarefas() throws Exception {
+      arquivoTarefas = new ArquivoTarefas();
+      arquivoCategorias = new ArquivoCategorias();
       int resposta = 0;
-      System.out.println(VERDE + "CRUD de Tarefas Iniciado" + RESET);
+      System.out.println(VERDE + ">Inicio>Tarefas" + RESET);
 
       System.out.println(AMARELO + "1) Incluir" + RESET);
       System.out.println(AMARELO + "2) Buscar" + RESET);
@@ -90,24 +93,41 @@ public class App {
         case 4:
           Deletar();
           break;
+        case 5:
+          break;
+        default:
+          System.out.println("Opção Invalida");
       }
 
     }
 
+    private void listadeTarefas(String nomeCategoria)throws Exception{
+    try{
+      ArrayList<Tarefa> t = arquivoCategorias.read(nomeCategoria);
+
+      for (int i = 0; i < t.size(); i++) {
+        System.out.println(VERDE + "[" + "Nome da Tarefa: " + t.get(i).getNome() + "||" + "Data de Inicio: "
+            + t.get(i).getInicio() + "||" + "Data de Fim: " + t.get(i).getFim() + "||" +
+            "Status: " + t.get(i).getStatus() + "||" + "Prioridade: " + t.get(i).getPrioridade() + "]" + RESET);
+      }
+    }catch(Exception e){
+      System.out.println(e.getLocalizedMessage());
+    }
+    }
+
     /* Interface Deletando Tarefa */
     public void Deletar() throws Exception {
-      ArquivoTarefas arquivoTarefas = new ArquivoTarefas();
-      ArquivoCategorias arquivoCategorias = new ArquivoCategorias();
 
       String nomeCategoria, nomeTarefa;
 
       try {
+        scanf.nextLine();
         System.out.println("Digite o nome da Categoria a qual pertence a tarefa que deseja deletar");
         arquivoCategorias.listar();
         nomeCategoria = scanf.nextLine();
 
         System.out.println("Digite o nome da Tarefa que deseja deletar");
-        arquivoTarefas.listar();
+        this.listadeTarefas(nomeCategoria);
         nomeTarefa = scanf.nextLine();
 
         arquivoCategorias.deleteTarefa(nomeCategoria, nomeTarefa);
@@ -119,9 +139,15 @@ public class App {
 
     /* Interface Listando Tarefa */
     public void listarTarefas() throws Exception {
-      ArquivoTarefas arquivoTarefas = new ArquivoTarefas();
+      String nomeCategoria;
       try {
-        arquivoTarefas.listar();
+        scanf.nextLine();
+        System.out.println("Digite o nome da Categoria a qual pertence a tarefa que deseja Listar");
+        arquivoCategorias.listar();
+        nomeCategoria = scanf.nextLine();
+
+        this.listadeTarefas(nomeCategoria);
+
       } catch (Exception e) {
         System.out.println(e.getMessage());
       }
@@ -129,8 +155,6 @@ public class App {
 
     /* Interface Atualizando Tarefa */
     public void atualizarTarefa() throws Exception {
-      ArquivoTarefas arquivoTarefas = new ArquivoTarefas();
-      ArquivoCategorias arquivoCategorias = new ArquivoCategorias();
 
       Tarefa t = new Tarefa();
       String input, nomedaTarefa, nomedaCategoria;
@@ -145,8 +169,13 @@ public class App {
 
         /* Scanneando o Nome da Tarefa */
         System.out.println("Digite o nome da tarefa que deseja Alterar");
-        arquivoTarefas.listar();
+
+        this.listadeTarefas(nomedaCategoria);
+
         nomedaTarefa = scanf.nextLine();
+
+        System.out.println("Digite seu novo nome");
+        t.setNome(scanf.nextLine());
 
         /* Scanneando a Data de Inicio */
         System.out.println("Digite a data de inicio (No formato dd/MM/yyyy)");
@@ -181,8 +210,6 @@ public class App {
 
     /* Interface de Criação da Tarefa */
     public void criarTarefa() throws Exception {
-      ArquivoTarefas arquivoTarefas = new ArquivoTarefas();
-      ArquivoCategorias arquivoCategorias = new ArquivoCategorias();
 
       Tarefa t = new Tarefa();
       String input;
@@ -233,7 +260,7 @@ public class App {
 
   }
 
-  public static class CrudCategorias{
+  public static class CrudCategorias {
     public static ArquivoCategorias categoria;
     public static final String AMARELO = "\033[33m"; // Amarelo
     public static final String VERDE = "\033[32m"; // Verde
@@ -243,7 +270,7 @@ public class App {
     public void iniciarCategoria() throws Exception {
       categoria = new ArquivoCategorias();
       int resposta = 0;
-      System.out.println(VERDE + "CRUD de Categoria Iniciado" + RESET);
+      System.out.println(VERDE + ">Inicio>Categorias" + RESET);
 
       System.out.println(AMARELO + "1) Incluir" + RESET);
       System.out.println(AMARELO + "2) Buscar" + RESET);
@@ -261,21 +288,27 @@ public class App {
           listarCategoria();
           break;
         case 3:
-        atualizarCategoria();
-        break;
+          atualizarCategoria();
+          break;
         case 4:
-        deletarCategoria();
-        break;
+          deletarCategoria();
+          break;
+        case 5:
+          break;
+        default:
+          System.out.println("Opção Inválida");
+          break;
       }
     }
+    
 
-    public void criarCategoria() throws Exception{
-      try{
-        /*Limpar o buffer */
+    public void criarCategoria() throws Exception {
+      try {
+        /* Limpar o buffer */
         scanf.nextLine();
         System.out.println("Digite o nome da Categoria a ser Criada");
         categoria.create(scanf.nextLine());
-      }catch(Exception e){
+      } catch (Exception e) {
         System.out.println(e.getMessage());
       }
       System.out.println("Criado com sucesso");
@@ -283,31 +316,32 @@ public class App {
       categoria.listar();
     }
 
-    public void listarCategoria() throws Exception{
+    public void listarCategoria() throws Exception {
       String nomeCategoria;
-      try{
+      try {
         scanf.nextLine();
         System.out.println("Digite o nome da Categoria que deseja listar as tarefas");
         System.out.println();
-        categoria.listar(); 
+        categoria.listar();
 
         nomeCategoria = scanf.nextLine();
 
         ArrayList<Tarefa> t = categoria.read(nomeCategoria);
 
-        for(int i = 0; i<t.size(); i++){
-          System.out.println(VERDE + "[" + "Nome da Tarefa: " +  t.get(i).getNome() + "||" + "Data de Inicio: " + t.get(i).getInicio() + "||" + "Data de Fim: " + t.get(i).getFim() + "||" +
-          "Status: " + t.get(i).getStatus() + "||" + "Prioridade: " + t.get(i).getPrioridade() + "]" + RESET);       
+        for (int i = 0; i < t.size(); i++) {
+          System.out.println(VERDE + "[" + "Nome da Tarefa: " + t.get(i).getNome() + "||" + "Data de Inicio: "
+              + t.get(i).getInicio() + "||" + "Data de Fim: " + t.get(i).getFim() + "||" +
+              "Status: " + t.get(i).getStatus() + "||" + "Prioridade: " + t.get(i).getPrioridade() + "]" + RESET);
         }
 
-      }catch(Exception e){
+      } catch (Exception e) {
         System.out.println(e.getMessage());
       }
     }
 
-    public void atualizarCategoria() throws Exception{
+    public void atualizarCategoria() throws Exception {
       String nomeCategoria, novaCategoria;
-      try{
+      try {
         scanf.nextLine();
         System.out.println("Digite o nome da Categoria que deseja atualizar");
         System.out.println();
@@ -318,15 +352,15 @@ public class App {
         novaCategoria = scanf.nextLine();
 
         categoria.update(nomeCategoria, novaCategoria);
-      }catch(Exception e){
+      } catch (Exception e) {
         System.out.println(e.getMessage());
       }
       System.out.println("Atualizado com sucesso");
     }
-    
-    public void deletarCategoria() throws Exception{
+
+    public void deletarCategoria() throws Exception {
       String nomeCategoria;
-      try{
+      try {
         scanf.nextLine();
         System.out.println("Digite o nome da Categoria que deseja deletar");
         System.out.println();
@@ -334,10 +368,10 @@ public class App {
 
         nomeCategoria = scanf.nextLine();
 
-        if(categoria.delete(nomeCategoria)){
+        if (categoria.delete(nomeCategoria)) {
           System.out.println("Deletado com sucesso");
         }
-      }catch(Exception e){
+      } catch (Exception e) {
         System.out.println(e.getMessage());
       }
     }
