@@ -1,3 +1,15 @@
+# Instruções de Utilização
+
+Para rodar o projeto, siga as seguintes instruções:
+
+<pre>Navegue para o diretório Build</pre>
+
+<pre>Execute "cmake .." para configurar o projeto</pre>
+
+<pre>Para compilar o projeto, use "cmake --build ."</pre>
+
+<pre>Para rodar o projeto utilize "cmake --build . --target run"</pre>
+
 # Documentação TP_02
 
   
