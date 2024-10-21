@@ -2,6 +2,8 @@
 
 Para rodar o projeto, siga as seguintes instruções:
 
+<pre>Tenha ciência que precisa ter o "CMake" instalado no computador, disponível no link: <a href="https://cmake.org/">CMake Instalador</a></pre>
+
 <pre>Navegue para o diretório Build</pre>
 
 <pre>Execute "cmake .." para configurar o projeto</pre>
