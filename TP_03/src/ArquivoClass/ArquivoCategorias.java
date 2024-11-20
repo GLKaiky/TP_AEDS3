@@ -158,9 +158,10 @@ public class ArquivoCategorias extends Arquivo<Categoria> {
     }
 
     /* Listando as Categorias */
-    public void listar() throws Exception{
+    public ArrayList<Categoria> listar() throws Exception{
+        ArrayList<Categoria> categorias = new ArrayList<>();
         try{
-            ArrayList<Categoria> categorias = super.list();
+            categorias = super.list();
 
             if(categorias.isEmpty())
                 throw new Exception("Categorias ainda não foram criadas");
@@ -171,6 +172,6 @@ public class ArquivoCategorias extends Arquivo<Categoria> {
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
+        return categorias;
     }
-
 }
