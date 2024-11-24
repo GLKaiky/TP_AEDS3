@@ -99,7 +99,7 @@ public class StopWords {
   }
 
   // Método principal apenas para testes
-  public void referencia(String[] args) {
+  /*public void referencia(String[] args) {
     //Inicialização de Variáveis
     StopWords stopWords = new StopWords();
     Scanner console = new Scanner(System.in);
@@ -217,5 +217,5 @@ public class StopWords {
       e.printStackTrace();
     }
     console.close();
-  }
+  }*/
 }
