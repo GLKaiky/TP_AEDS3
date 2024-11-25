@@ -29,7 +29,8 @@ Este arquivo permite a manipulação do arquivo que contém as tarefas em conjun
 
 
 ### 🔵ArquivoEtiqueta.java
-*Para o Kaiky explicar.*
+
+<pre>A classe ArquivoEtiqueta gerencia as operações de CRUD para etiquetas associadas às tarefas, incluindo criação, leitura, atualização e exclusão de etiquetas. Esta classe utiliza uma árvore B+ para armazenamento eficiente das etiquetas e permite vincular ou desvincular etiquetas às tarefas, além de buscar tarefas baseadas nas etiquetas associadas.</pre>
 
 ### 🔵StopWords.java
 Possui a Lista Invertida, um ArrayList contendo uma lista de palavras inválidas (No caso, a lista de StopWords). Ele possui o método "stopWordsCheck",  para verificar as palavras que são StopWords, assim substituindo por espaços em branco. Possui o método "wordsCounter" , no qual verifica as palavras válidas e faz o cálculo da frequência. O construtor abre o arquivo de texto "stopWordsList.txt" e lê o arquivo para verificar quais são as stopwords. E por fim, um método de inserção na Lista Invertida 
@@ -49,10 +50,10 @@ Foi uma experiência desafiadora, mas divertida, uma vez que, necessitou-se de m
 <pre>Sim, como mencionada anteriormente, todas as operações foram implementadas seguindo os códigos previamente desenvolvidos, tanto pelo professor, quanto pelos alunos.</pre>
 
 ### É possível buscar tarefas por palavras usando o índice invertido?
-<pre>*Para o Kaiky explicar.*</pre>
+<pre>Sim, é possível buscar tarefas por palavras válidas presentes no título das tarefas. O índice invertido permite buscar rapidamente por essas palavras e encontrar os IDs das tarefas associadas.</pre>
 
 ### É possível buscar tarefas por rótulos usando uma árvore B+? 
-<pre>*Para o Kaiky explicar.*</pre>
+<pre>Sim, a busca por rótulos é realizada usando a Árvore B+, que armazena e indexa as etiquetas, permitindo uma busca rápida e eficiente por tarefas relacionadas a um rótulo específico.</pre>
 
 ### O trabalho está funcionando corretamente?
 <pre>Sim, o trabalho está totalmente funcional</pre>
