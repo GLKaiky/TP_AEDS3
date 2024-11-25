@@ -65,4 +65,4 @@ Foi uma experiência desafiadora, mas divertida, uma vez que, necessitou-se de m
 <pre>Sim, foi um trabalho feito em equipe pelo grupo</pre>
 
 
-<img src="../Pictures/IMG_20241125_095944174.jpg" style="width: 200px; height: 150px;">
+<img src="../Pictures/IMG_20241125_095944174.jpg" style="width: 300px; height: 270px;">
