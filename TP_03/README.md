@@ -66,4 +66,4 @@ Foi uma experiência desafiadora, mas divertida, uma vez que, necessitou-se de m
 
 
 ## 🔴O Grupo
-<img src="../Pictures/IMG_20241125_095944174.jpg" style="width: 300px; height: 270px;">
+<img src="../Pictures/IMG_20241125_095944174.jpg" style="width: 600px; height: 270px;">
