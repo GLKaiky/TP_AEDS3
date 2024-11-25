@@ -63,3 +63,6 @@ Foi uma experiência desafiadora, mas divertida, uma vez que, necessitou-se de m
 
 ### O trabalho é original e não a cópia de um trabalho de outro grupo?
 <pre>Sim, foi um trabalho feito em equipe pelo grupo</pre>
+
+
+<img src="../Pictures/IMG_20241125_095944174.jpg">
