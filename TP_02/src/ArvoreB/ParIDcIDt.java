@@ -58,14 +58,17 @@ public class ParIDcIDt implements RegistroArvoreBMais<ParIDcIDt>{
     
     @Override
 
+    /* Método de Clonagem */
     public ParIDcIDt clone(){
         return new ParIDcIDt(this.id1, this.id2);
     }
 
+    /* Retorna o Tamanho do Registro */
     public short size(){
         return this.TAMANHO;
     }
 
+    /* Comparação */
     public int compareTo(ParIDcIDt a){
         if(this.id1 != a.id1){
             return this.id1 - a.id1;
@@ -74,6 +77,7 @@ public class ParIDcIDt implements RegistroArvoreBMais<ParIDcIDt>{
         }
     }
 
+    /* Formatação da String */
     public String toString(){
         return String.format("%3d", this.id1) + ";" + String.format("%-3d", this.id2);
     }
