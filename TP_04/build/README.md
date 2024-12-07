@@ -1,0 +1,1 @@
+Diretorio destinado aos arquivos do CMake
