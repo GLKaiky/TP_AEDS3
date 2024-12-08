@@ -23,13 +23,17 @@ public class BackupLZW extends LZW {
 
         // Caminho do arquivo de backup
         String arquivoBackup = pastaBackupDir + "/backup_file.lzw";
+        long tamanhoOriginalTotal = 0;
+
         try (FileOutputStream arquivoSaida = new FileOutputStream(arquivoBackup)) {
             File pasta = new File(pastaDados);
-
+            
+            //Erro ao abrir a pasta
             if (!pasta.isDirectory()) {
                 throw new IllegalArgumentException("O caminho especificado não é uma pasta.");
             }
-
+            
+            //Array de arquivos da pasta
             File[] arquivos = pasta.listFiles();
 
             if (arquivos == null || arquivos.length == 0) {
@@ -37,9 +41,12 @@ public class BackupLZW extends LZW {
                 return;
             }
 
+            //Caso haja arquivos dentro da pasta, é feito a compactação para um array de bytes.
             for (File arquivo : arquivos) {
                 if (arquivo.isFile()) {
                     System.out.println("Compactando arquivo: " + arquivo.getName());
+
+                    tamanhoOriginalTotal += arquivo.length();
 
                     try (FileInputStream arquivoEntrada = new FileInputStream(arquivo)) {
                         // Compacta os dados enquanto lê
@@ -53,16 +60,32 @@ public class BackupLZW extends LZW {
 
             System.out.println("Backup realizado com sucesso!");
 
+
+            //----| FAZENDO O CALUCLO DA TAXA DE COMPRESSÃO |----
+            
+            // Obtenha o tamanho do arquivo compactado
+            File arquivoCompactado = new File(arquivoBackup);
+            long tamanhoCompactado = arquivoCompactado.length();
+
+            // Calcule a taxa de compressão
+            double taxaCompressao = (double) tamanhoOriginalTotal / tamanhoCompactado;
+            System.out.printf("Taxa de Compressão: %.2f%n", taxaCompressao);
+
+            //----------------------------------------------------s
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    //Método de Compactação do Fluxo de bytes
     private byte[] compactarFluxo(InputStream inputStream) throws Exception {
+
         ByteArrayOutputStream dadosCompactados = new ByteArrayOutputStream();
         byte[] buffer = new byte[BUFFER_SIZE];
         int bytesLidos;
-    
+        
+        //Looping enquanto haver bytes para ler
         while ((bytesLidos = inputStream.read(buffer)) != -1) {
             // Compactar o bloco lido
             byte[] dadosCompactadosBloco = super.codifica(sliceBuffer(buffer, bytesLidos));
@@ -92,10 +115,13 @@ public class BackupLZW extends LZW {
         arquivoSaida.write(dadosCompactados);
     }
 
+
+    //Método para recuperar arquivo
     public void recuperarArquivo(String caminhoBackup) throws Exception {
         File arquivoBackup = new File(caminhoBackup);
 
         try (FileInputStream fis = new FileInputStream(arquivoBackup)) {
+
             while (fis.available() > 0) {
                 // Lê o tamanho do nome do arquivo
                 byte[] nomeBytesLength = new byte[4];
@@ -129,7 +155,7 @@ public class BackupLZW extends LZW {
         }
     }
 
-    
+    //Método para descompactar o fluxo de bytes.
     private byte[] descompactarFluxo(InputStream inputStream) throws Exception{
         ByteArrayOutputStream dadosDescompactados = new ByteArrayOutputStream();
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -144,7 +170,7 @@ public class BackupLZW extends LZW {
         return dadosDescompactados.toByteArray();
     }
     
-
+    //Usa-se operadores de deslocamento de bits para converter um Int para array de byte
     private byte[] intParaBytes(int valor) {
         return new byte[]{
             (byte) (valor >> 24),
@@ -154,6 +180,8 @@ public class BackupLZW extends LZW {
         };
     }
 
+
+    //Usa-se operadores de deslocamento de bits para converter um array de bytes para Int
     private int bytesParaInt(byte[] bytes) {
         return ((bytes[0] & 0xFF) << 24) | ((bytes[1] & 0xFF) << 16) |
                ((bytes[2] & 0xFF) << 8) | (bytes[3] & 0xFF);
