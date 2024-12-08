@@ -106,14 +106,14 @@ public class App {
             scanner.nextLine(); // evitar problemas de buffer
             
             //Encontrando a pasta de backup e colocando em um array.
-            File pastaBackup = new File("../TP_AEDS3");
+            File pastaBackup = new File("./backup");
             File[] backups = pastaBackup.listFiles();
             
             //Verifica se há backups para recuperar
             if (backups != null && versaoEscolhida > 0 && versaoEscolhida <= backups.length) {
 
                 //Caminho completo para recuperação
-                String caminhoBackup = backups[versaoEscolhida - 1].getAbsolutePath() + "/backup_file.lzw";
+                String caminhoBackup = "/" + backups[versaoEscolhida - 1].getAbsolutePath();
                 
                 try {
                     backupLZW.recuperarArquivo(caminhoBackup);
@@ -137,7 +137,7 @@ public class App {
   private static void listarBackups() {
 
     //Diretório
-    File pastaBackup = new File("../TP_AEDS3"); //Indo ao "TP_AEDS3", no qual é onde está tendo os backups
+    File pastaBackup = new File("./backup"); //Indo ao "TP_AEDS3", no qual é onde está tendo os backups
     if (pastaBackup.isDirectory()) {
 
         //Array de arquivos

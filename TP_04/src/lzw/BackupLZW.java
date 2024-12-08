@@ -16,13 +16,13 @@ public class BackupLZW extends LZW {
 
         // Criação da pasta de backup com a data atual
         String dataBackup = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File pastaBackupDir = new File(pastaBackup + "backup_" + dataBackup);
+        File pastaBackupDir = new File(pastaBackup);
         if (!pastaBackupDir.exists()) {
             pastaBackupDir.mkdirs();
         }
 
         // Caminho do arquivo de backup
-        String arquivoBackup = pastaBackupDir + "/backup_file.lzw";
+        String arquivoBackup = pastaBackupDir + "/" + dataBackup + "backup_file.lzw";
         long tamanhoOriginalTotal = 0;
 
         try (FileOutputStream arquivoSaida = new FileOutputStream(arquivoBackup)) {
