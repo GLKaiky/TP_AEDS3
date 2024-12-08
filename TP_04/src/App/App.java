@@ -4,6 +4,7 @@ import ArquivoClass.*;
 import Tarefa.*;
 import lzw.*;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -34,6 +35,7 @@ public class App {
         System.out.println(VERDE + "1) Tarefas" + RESET);
         System.out.println(VERDE + "2) Categorias" + RESET);
         System.out.println(VERDE + "3) Etiquetas" + RESET);
+        System.out.println(VERDE + "4) Backup" + RESET);
 
         resposta = scanf.nextInt();
 
@@ -51,6 +53,10 @@ public class App {
             break;
           case 3:
             crudEtiquetas.iniciarEtiqueta();
+            break;
+          case 4:
+            realizarBackup();
+            break;
           default:
             System.out.println("Opção Inválida");
         }
@@ -63,6 +69,102 @@ public class App {
 
   }
 
+  //----| MÉTODOS DE BACKUP COM LZW |----
+
+  //Realizando o Backup
+  public static void realizarBackup() throws Exception {
+
+    //Atributos
+    BackupLZW backupLZW = new BackupLZW();
+    Scanner scanner = new Scanner(System.in);
+
+    //Opções
+    System.out.println(VERDE + ">Backup" + RESET);
+    System.out.println("1) Compactar Arquivos");
+    System.out.println("2) Recuperar Arquivo");
+
+    int escolha = scanner.nextInt();
+    //scanner.nextLine(); // evitar problemas de buffer
+
+    switch (escolha) {
+        //Compactação do arquivo
+        case 1:
+            try {
+                backupLZW.compactarArquivos();
+            } catch (Exception e) {
+                System.out.println("Erro ao compactar arquivos: " + e.getMessage());
+                e.printStackTrace();
+            }
+            break;
+
+        //Listando e recupeando arquivos
+        case 2:
+            listarBackups(); // Lista as versões disponíveis
+            System.out.println("Escolha o número da versão a recuperar:");
+
+            int versaoEscolhida = scanner.nextInt();
+            scanner.nextLine(); // evitar problemas de buffer
+            
+            //Encontrando a pasta de backup e colocando em um array.
+            File pastaBackup = new File("../TP_AEDS3");
+            File[] backups = pastaBackup.listFiles();
+            
+            //Verifica se há backups para recuperar
+            if (backups != null && versaoEscolhida > 0 && versaoEscolhida <= backups.length) {
+
+                //Caminho completo para recuperação
+                String caminhoBackup = backups[versaoEscolhida - 1].getAbsolutePath() + "/backup_file.lzw";
+                
+                try {
+                    backupLZW.recuperarArquivo(caminhoBackup);
+                } 
+                catch (Exception e) {
+                    System.out.println("Erro ao recuperar arquivo: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Opção inválida. Nenhuma recuperação realizada.");
+            }
+            break;
+        default:
+            System.out.println("Opção inválida.");
+    }
+
+    //scanner.close();
+  }
+
+  //--| Método para listar os backups. |--
+  private static void listarBackups() {
+
+    //Diretório
+    File pastaBackup = new File("../TP_AEDS3"); //Indo ao "TP_AEDS3", no qual é onde está tendo os backups
+    if (pastaBackup.isDirectory()) {
+
+        //Array de arquivos
+        File[] backups = pastaBackup.listFiles();
+
+        //Verifica se há itens na pasta de backup
+        if (backups != null && backups.length > 0) {
+
+            for (int i = 0; i < backups.length; i++) {
+                System.out.println((i + 1) + ") " + backups[i].getName());
+            }
+            
+        } else {
+            System.out.println("Nenhum backup encontrado.");
+        }
+      } 
+      else {
+        // Caso a pasta não exista ou não seja um diretório válido
+        System.out.println("A pasta de backup não foi encontrada.");
+      }
+  }
+
+  //-----------------------------------------------------
+
+
+
+  //----| CRUD DE TAREFAS |----
   public static class CrudTarefas {
     public static ArquivoTarefas arquivoTarefas;
     public static ArquivoCategorias arquivoCategorias;
@@ -449,6 +551,9 @@ public class App {
       }
     }
   }
+  //|-----------------------------------------------------------|
+
+  //----| CRUD DE CATEGORAIS |----
 
   public static class CrudCategorias {
     public static ArquivoCategorias categoria;
@@ -571,7 +676,9 @@ public class App {
       }
     }
   }
+  //|---------------------------------------------|
 
+  //----| CRUD DE ETIQUETAS |----
   public static class CrudEtiquetas {
     public static ArquivoEtiqueta arqEtiqueta;
     public static final String AMARELO = "\033[33m"; // Amarelo
@@ -690,4 +797,5 @@ public class App {
       }
     }
   }
+  //------------------------------------------------
 }
