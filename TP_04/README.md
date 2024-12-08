@@ -74,3 +74,7 @@ O desenvolvimento desta classe foi desafiador, especialmente na integração dos
 ```java
 BackupLZW backup = new BackupLZW();
 backup.compactarArquivos();
+
+## O Samuel
+
+<img src="../Pictures/samuel.jpg">
