@@ -68,13 +68,6 @@ O desenvolvimento desta classe foi desafiador, especialmente na integração dos
 
 ---
 
-## 🟣 Exemplo de Uso  
-
-### Compactação  
-```java
-BackupLZW backup = new BackupLZW();
-backup.compactarArquivos();
-
 ## O Samuel
 
 <img src="../Pictures/samuel.jpg">
