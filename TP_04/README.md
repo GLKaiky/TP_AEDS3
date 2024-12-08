@@ -70,4 +70,4 @@ O desenvolvimento desta classe foi desafiador, especialmente na integração dos
 
 ## O Samuel
 
-<img src="../Pictures/samuel.jpg">
+<img width="200px" height="200px" src="../Pictures/samuel.jpg">
