@@ -65,7 +65,26 @@ O desenvolvimento desta classe foi desafiador, especialmente na integração dos
 ---
 
 ## 🟠 Checklist de Funcionalidades  
+### Há uma rotina de compactação usando o algoritmo LZW para fazer backup dos arquivos?
+<pre>Sim, foi feito a implementação da compactação LZW para fazer os backups dos arquivos.</pre>
 
+### Há uma rotina de descompactação usando o algoritmo LZW para recuperação dos arquivos?
+<pre>Sim, além da compactação para fazer o backup dos arquivos, há também a implementação da descompactação e recuperação dos arquivos usando o algoritmo LZW.</pre>
+
+### O usuário pode escolher a versão a recuperar?
+<pre>Sim, ao fazer a recuperação dos arquivos, é disponivel ao usuário escolher qual versão ele gostaria de recuperar.</pre>
+
+### Qual foi a taxa de compressão alcançada por esse backup?
+<pre>A taxa de compressão alcançada foi de 1,02.</pre>
+
+### O trabalho está funcionando corretamente?
+<pre>Sim, o trabalho está totalmente funcional</pre>
+
+### O trabalho está completo?
+<pre>Sim, o trabalho foi completo com sucesso</pre>
+
+### O trabalho é original e não a cópia de um trabalho de outro grupo?
+<pre>Sim, foi um trabalho feito em equipe pelo grupo</pre>
 ---
 
 ## O Samuel
